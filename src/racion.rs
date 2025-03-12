@@ -42,6 +42,10 @@ impl Racion {
             id: Uuid::new_v4(),
         }
     }
+
+    fn get_tag(&self, nombre: &str) -> String {
+        format!("[ración][{}][{}]: ", self.id, nombre)
+    }
 }
 
 /// Implementación de los métodos getter y setter para la estructura `Racion`.
@@ -61,7 +65,7 @@ impl Racion {
     /// assert_eq!(racion.get_pulso_duracion(), 500); // Verifica que la duración del pulso sea 500 ms.
     /// ```
     pub fn set_pulso_duracion(&mut self, n: u32) -> &mut Self {
-        self.pulso_duracion.set(n, "pulsos_duracion");
+        self.pulso_duracion.set(n, &self.get_tag("pulsos_duracion"));
         self
     }
 
@@ -80,7 +84,7 @@ impl Racion {
     /// assert_eq!(racion.get_pulsos(), 10); // Verifica que el número de pulsos sea 10.
     /// ```
     pub fn set_pulsos(&mut self, n: u32) -> &mut Self {
-        self.pulsos.set(n, "pulsos");
+        self.pulsos.set(n, &self.get_tag("pulsos"));
         self
     }
 
@@ -99,7 +103,7 @@ impl Racion {
     /// assert_eq!(racion.get_pulso_espera(), 100); // Verifica que el tiempo de espera sea 100 ms.
     /// ```
     pub fn set_pulso_espera(&mut self, n: u32) -> &mut Self {
-        self.pulso_espera.set(n, "pulsos_espera");
+        self.pulso_espera.set(n, &self.get_tag("pulsos_espera"));
         self
     }
 

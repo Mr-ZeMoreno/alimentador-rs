@@ -105,11 +105,11 @@ impl Rango {
         [self.min, self.max]
     }
 
-    pub fn set(&mut self, valor: u32, nombre: &str) {
+    pub fn set(&mut self, valor: u32, tag: &str) {
         let valor_actual = self.get();
         let rango = self.get_rango();
 
-        print!("{}", nombre);
+        print!("{}", tag);
         match self.set_rango_value(valor) {
             Ok(()) => {
                 println!("El valor ha cambiado de {} a {}", valor_actual, valor);
