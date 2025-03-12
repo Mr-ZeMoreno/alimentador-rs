@@ -1,7 +1,7 @@
-// use crate::Silo;
 use crate::Dosificador;
 use crate::Programa;
 use crate::Racion;
+use crate::Silo;
 use crate::Soplador;
 
 /// El trait `Debuggeable` permite que un tipo implemente el método `print`
@@ -11,6 +11,10 @@ use crate::Soplador;
 /// - `print`: Imprime la información relevante del tipo en la consola.
 pub trait Debuggeable {
     fn print(&self) -> &Self;
+}
+
+pub trait DebuggeableConArg {
+    fn print(&self, arg: u32) -> &Self;
 }
 
 impl Debuggeable for Soplador {
@@ -105,6 +109,32 @@ impl<'a> Debuggeable for Programa<'a> {
                 .collect::<Vec<String>>()
                 .join(", ")
         );
+        self
+    }
+}
+
+impl DebuggeableConArg for Silo {
+    /// Imprime la información del silo y la cantidad de alimento que se va a entregar.
+    ///
+    /// # Parámetros:
+    /// - `pulso`: La cantidad de alimento que se entregará.
+    ///
+    /// # Retorna:
+    /// Una referencia al silo para permitir el encadenamiento de métodos.
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let mut silo = Silo::new();
+    /// silo.set_alimento(1000);
+    /// silo.print(200);
+    /// ```
+    fn print(&self, pulso: u32) -> &Silo {
+        println!(
+            "\nSilo: {} - Historico: {}",
+            self.get_alimento(),
+            self.get_historico()
+        );
+        println!("Entregando {} kg\n", pulso);
         self
     }
 }

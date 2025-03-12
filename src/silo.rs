@@ -98,26 +98,6 @@ impl Silo {
     pub fn entregar_pulso(&mut self, pulso: u32) -> &mut Silo {
         self.set_alimento(self.get_alimento() - pulso)
     }
-
-    /// Imprime la información del silo y la cantidad de alimento que se va a entregar.
-    ///
-    /// # Parámetros:
-    /// - `pulso`: La cantidad de alimento que se entregará.
-    ///
-    /// # Retorna:
-    /// Una referencia al silo para permitir el encadenamiento de métodos.
-    ///
-    /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new();
-    /// silo.set_alimento(1000);
-    /// silo.print_silo(200);
-    /// ```
-    pub fn print_silo(&self, pulso: u32) -> &Silo {
-        println!("\nSilo: {} - Historico: {}", self.alimento, self.historico);
-        println!("Entregando {} kg\n", pulso);
-        self
-    }
 }
 
 /// Implementación de getter y setter
