@@ -1,9 +1,9 @@
-use crate::traits::debug::Debuggeable;
-
 mod traits;
 
 mod utils;
 
+use traits::debug::Debuggeable;
+use traits::debug::DebuggeableConArg;
 use utils::{sleep, Rango};
 
 mod racion;
@@ -66,7 +66,7 @@ fn main() {
             let entregado = doser.get_entrega() * (pulso_duracion / 1000);
 
             doser.set_estado(true).print();
-            silo.entregar_pulso(entregado).print_silo(entregado);
+            silo.entregar_pulso(entregado).print(entregado);
 
             sleep(u64::from(pulso_duracion));
 
