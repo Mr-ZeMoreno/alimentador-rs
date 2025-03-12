@@ -185,4 +185,19 @@ impl Silo {
     fn get_espacio_restante(&self) -> u32 {
         self.capacidad - self.alimento
     }
+
+    /// Obtiene el identificador único de la ración.
+    ///
+    /// # Retorna:
+    /// El identificador único de la ración (de tipo `Uuid`).
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let silo = Silo::new();
+    /// let id = silo.get_id();
+    /// println!("El ID del silo es: {}", id);
+    /// ```
+    pub fn get_id(&self) -> Uuid {
+        self.id
+    }
 }
