@@ -4,20 +4,20 @@ use crate::Racion;
 use crate::Silo;
 use crate::Soplador;
 
-/// El trait `Debuggeable` permite que un tipo implemente el método `print`
+/// El trait `Print` permite que un tipo implemente el método `print`
 /// para mostrar su estado de manera legible.
 ///
 /// # Métodos:
 /// - `print`: Imprime la información relevante del tipo en la consola.
-pub trait Debuggeable {
+pub trait Print {
     fn print(&self) -> &Self;
 }
 
-pub trait DebuggeableConArg {
+pub trait PrintConArg {
     fn print(&self, arg: u32) -> &Self;
 }
 
-impl Debuggeable for Soplador {
+impl Print for Soplador {
     /// Imprime el estado del soplador.
     ///
     /// Muestra el `id`, la `potencia`, y si está `encendido` o `apagado`.
@@ -45,7 +45,7 @@ impl Debuggeable for Soplador {
     }
 }
 
-impl Debuggeable for Dosificador {
+impl Print for Dosificador {
     /// Imprime el estado del dosificador.
     ///
     /// Muestra el `id` y si el dosificador está `encendido` o `apagado`.
@@ -68,7 +68,7 @@ impl Debuggeable for Dosificador {
     }
 }
 
-impl Debuggeable for Racion {
+impl Print for Racion {
     /// Imprime la información detallada de una ración.
     ///
     /// Muestra el `id`, los `pulsos`, la duración del pulso en milisegundos (`DP`),
@@ -91,7 +91,7 @@ impl Debuggeable for Racion {
     }
 }
 
-impl<'a> Debuggeable for Programa<'a> {
+impl<'a> Print for Programa<'a> {
     /// Imprime los detalles del programa, incluyendo su `id` y los `id`s de las raciones asociadas.
     ///
     /// # Ejemplo:
@@ -113,7 +113,7 @@ impl<'a> Debuggeable for Programa<'a> {
     }
 }
 
-impl DebuggeableConArg for Silo {
+impl PrintConArg for Silo {
     /// Imprime la información del silo y la cantidad de alimento que se va a entregar.
     ///
     /// # Parámetros:

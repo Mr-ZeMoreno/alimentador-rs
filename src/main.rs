@@ -2,8 +2,7 @@ mod traits;
 
 mod utils;
 
-use traits::debug::Debuggeable;
-use traits::debug::DebuggeableConArg;
+use traits::debug::{Print, PrintConArg};
 use utils::{sleep, Rango};
 
 mod racion;
