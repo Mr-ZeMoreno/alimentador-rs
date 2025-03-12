@@ -58,20 +58,6 @@ impl Silo {
         }
     }
 
-    /// Actualiza el valor histórico del silo sumando los kilogramos de alimento pasados.
-    ///
-    /// # Parámetros:
-    /// - `n`: Los kilogramos de alimento que se van a agregar al histórico.
-    ///
-    /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new();
-    /// silo.set_historico(1000);
-    /// println!("Historico: {}", silo.get_historico()); // Imprime 1000.
-    /// ```
-    fn set_historico(&mut self, n: u32) {
-        self.historico += n;
-    }
     /// Verifica si se puede agregar más alimento al silo sin exceder su capacidad máxima.
     ///
     /// # Parámetros:
@@ -92,19 +78,63 @@ impl Silo {
         n + self.alimento <= self.capacidad
     }
 
-    /// Obtiene la cantidad de alimento máximo que se puede agregar al silo en dicho momento, es decir devuelve el espacio restante.
+    /// Realiza una entrega de alimento desde el silo.
+    ///
+    /// Disminuye la cantidad de alimento en el silo en el valor de `pulso`.
+    ///
+    /// # Parámetros:
+    /// - `pulso`: La cantidad de alimento a entregar.
     ///
     /// # Retorna:
-    /// `true` si es posible agregar `n` kilogramos sin superar la capacidad del silo,
-    /// `false` en caso contrario.
+    /// Una referencia mutable al silo para permitir encadenamiento de métodos.
     ///
     /// # Ejemplo:
     /// ```
     /// let mut silo = Silo::new();
-    /// println!("El espacio restante es: {} y la capacidad máxima es: {}", self.get_espacio_restante(), self.get_capacidad());
+    /// silo.set_alimento(1000);
+    /// silo.entregar_pulso(200);
+    /// assert_eq!(silo.get_alimento(), 800); // La cantidad de alimento disminuye a 800 kg.
     /// ```
-    fn get_espacio_restante(&self) -> u32 {
-        self.capacidad - self.alimento
+    pub fn entregar_pulso(&mut self, pulso: u32) -> &mut Silo {
+        self.set_alimento(self.get_alimento() - pulso)
+    }
+
+    /// Imprime la información del silo y la cantidad de alimento que se va a entregar.
+    ///
+    /// # Parámetros:
+    /// - `pulso`: La cantidad de alimento que se entregará.
+    ///
+    /// # Retorna:
+    /// Una referencia al silo para permitir el encadenamiento de métodos.
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let mut silo = Silo::new();
+    /// silo.set_alimento(1000);
+    /// silo.print_silo(200);
+    /// ```
+    pub fn print_silo(&self, pulso: u32) -> &Silo {
+        println!("\nSilo: {} - Historico: {}", self.alimento, self.historico);
+        println!("Entregando {} kg\n", pulso);
+        self
+    }
+}
+
+/// Implementación de getter y setter
+impl Silo {
+    /// Actualiza el valor histórico del silo sumando los kilogramos de alimento pasados.
+    ///
+    /// # Parámetros:
+    /// - `n`: Los kilogramos de alimento que se van a agregar al histórico.
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let mut silo = Silo::new();
+    /// silo.set_historico(1000);
+    /// println!("Historico: {}", silo.get_historico()); // Imprime 1000.
+    /// ```
+    fn set_historico(&mut self, n: u32) {
+        self.historico += n;
     }
 
     /// Establece la cantidad de alimento actual en el silo.
@@ -161,44 +191,18 @@ impl Silo {
         self.historico
     }
 
-    /// Realiza una entrega de alimento desde el silo.
-    ///
-    /// Disminuye la cantidad de alimento en el silo en el valor de `pulso`.
-    ///
-    /// # Parámetros:
-    /// - `pulso`: La cantidad de alimento a entregar.
+    /// Obtiene la cantidad de alimento máximo que se puede agregar al silo en dicho momento, es decir devuelve el espacio restante.
     ///
     /// # Retorna:
-    /// Una referencia mutable al silo para permitir encadenamiento de métodos.
+    /// `true` si es posible agregar `n` kilogramos sin superar la capacidad del silo,
+    /// `false` en caso contrario.
     ///
     /// # Ejemplo:
     /// ```
     /// let mut silo = Silo::new();
-    /// silo.set_alimento(1000);
-    /// silo.entregar_pulso(200);
-    /// assert_eq!(silo.get_alimento(), 800); // La cantidad de alimento disminuye a 800 kg.
+    /// println!("El espacio restante es: {} y la capacidad máxima es: {}", self.get_espacio_restante(), self.get_capacidad());
     /// ```
-    pub fn entregar_pulso(&mut self, pulso: u32) -> &mut Silo {
-        self.set_alimento(self.get_alimento() - pulso)
-    }
-
-    /// Imprime la información del silo y la cantidad de alimento que se va a entregar.
-    ///
-    /// # Parámetros:
-    /// - `pulso`: La cantidad de alimento que se entregará.
-    ///
-    /// # Retorna:
-    /// Una referencia al silo para permitir el encadenamiento de métodos.
-    ///
-    /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new();
-    /// silo.set_alimento(1000);
-    /// silo.print_silo(200);
-    /// ```
-    pub fn print_silo(&self, pulso: u32) -> &Silo {
-        println!("\nSilo: {} - Historico: {}", self.alimento, self.historico);
-        println!("Entregando {} kg\n", pulso);
-        self
+    fn get_espacio_restante(&self) -> u32 {
+        self.capacidad - self.alimento
     }
 }
