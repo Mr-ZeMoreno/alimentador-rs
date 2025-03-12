@@ -1,8 +1,10 @@
-use crate::lib::sleep::sleep;
 use crate::traits::debug::Debuggeable;
 
 mod traits;
-mod lib;
+
+mod utils;
+
+use utils::{sleep, Rango};
 
 mod racion;
 use racion::Racion;
@@ -19,21 +21,20 @@ use dosificador::Dosificador;
 mod soplador;
 use soplador::Soplador;
 
-
 fn main() {
     let mut racion1 = Racion::new();
     racion1
-    .set_pulsos(50)
-    .set_pulso_duracion(5000)
-    .set_pulso_espera(8000);
-    
+        .set_pulsos(50)
+        .set_pulso_duracion(5000)
+        .set_pulso_espera(8000);
+
     let mut racion2 = Racion::new();
     racion2
         .set_pulsos(20)
         .set_pulso_duracion(3000)
         .set_pulso_espera(4000);
 
-    let mut programa = Programa::new(vec![&racion1, &racion2, &racion1, &racion1]); 
+    let mut programa = Programa::new(vec![&racion1, &racion2, &racion1, &racion1]);
 
     let mut doser: Dosificador = Dosificador::new();
     let mut soplador: Soplador = Soplador::new(); /////////////////////////////////////
@@ -47,15 +48,13 @@ fn main() {
     programa.set_racion_espera(60000);
 
     for (i, racion) in programa.get_raciones().iter().enumerate() {
-        
         soplador.set_estado(true);
-        
-        // Obtén el id de la ración de forma inmutable
+
         let id = racion.get_id();
-        println!("[Ración: {}][Tipo: {}]: En Ejecución", i+1, id);
-        
-        let [mut pulsos, mut pulso_duracion, mut pulso_espera]: [u32; 3] = racion.get_all();
-        
+        println!("[Ración: {}][Tipo: {}]: En Ejecución", i + 1, id);
+
+        let [pulsos, pulso_duracion, pulso_espera]: [u32; 3] = racion.get_all();
+
         if pulso_duracion == 0 || pulsos == 0 || pulso_espera == 0 {
             break;
         }
@@ -74,7 +73,11 @@ fn main() {
             doser.set_estado(false).print();
             sleep(u64::from(pulso_espera));
         }
-        println!("Ración {}: En Espera... Duración {}s", id, programa.get_racion_espera());
+        println!(
+            "Ración {}: En Espera... Duración {}s",
+            id,
+            programa.get_racion_espera()
+        );
         sleep(u64::from(programa.get_racion_espera()));
     }
 }
