@@ -1,60 +1,184 @@
+use crate::Rango;
 use uuid::Uuid;
 
+/// Representa una **Ración**, que contiene parámetros para la duración y el comportamiento de los pulsos.
+///
+/// La estructura `Racion` tiene los siguientes campos:
+/// - **pulso_duracion**: La duración de cada pulso en milisegundos. No debería durar más de un minuto en producción.
+/// - **pulsos**: El número total de pulsos por ración.
+/// - **pulso_espera**: El tiempo entre cada pulso en milisegundos.
+/// - **id**: Un identificador único para cada instancia de la ración.
 pub struct Racion {
-    // Duración de pulsos en ms, 
-    // No deberían durar mas de un minuto en producción
-    pulso_duracion: u32,
-    // pulsos por ración 
-    pulsos:u32,
-    // tiempo entre pulsos en ms
-    pulso_espera:u32,
+    /// Duración de cada pulso en milisegundos. No debe ser mayor a un minuto en producción.
+    pulso_duracion: Rango,
 
-    //id
-    id: Uuid
+    /// Número total de pulsos por ración.
+    pulsos: Rango,
+
+    /// Tiempo de espera entre pulsos en milisegundos.
+    pulso_espera: Rango,
+
+    /// Identificador único de la ración.
+    id: Uuid,
 }
 
 impl Racion {
-    pub fn new()->Self {
+    /// Crea una nueva instancia de `Racion` con valores predeterminados.
+    /// Todos los campos se inicializan en `0`, y se genera un ID único para la ración.
+    ///
+    /// # Retorna:
+    /// Un nuevo objeto `Racion` con los valores predeterminados y un ID único generado.
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let racion = Racion::new();
+    /// assert_eq!(racion.get_pulsos(), 0); // La cantidad de pulsos debería ser 0 por defecto.
+    /// ```
+    pub fn new() -> Self {
         Self {
-            pulso_duracion: 0,
-            pulsos: 0,
-            pulso_espera:0,
-            id:Uuid::new_v4()
+            pulso_duracion: Rango::new(1000, 10000, 1000).unwrap(),
+            pulsos: Rango::new(0, 10000, 0).unwrap(),
+            pulso_espera: Rango::new(1000, 20000, 1000).unwrap(),
+            id: Uuid::new_v4(),
         }
     }
+}
 
-    pub fn set_pulso_duracion(&mut self, n:u32)->&mut Self{
-        self.pulso_duracion = n;
+/// Implementación de los métodos getter y setter para la estructura `Racion`.
+impl Racion {
+    /// Establece la duración de cada pulso en milisegundos.
+    ///
+    /// # Parámetros:
+    /// - `n`: La duración del pulso en milisegundos.
+    ///
+    /// # Retorna:
+    /// Una referencia mutable al objeto `Racion` para permitir el encadenamiento de llamadas (method chaining).
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let mut racion = Racion::new();
+    /// racion.set_pulso_duracion(500); // Establece la duración del pulso a 500 ms.
+    /// assert_eq!(racion.get_pulso_duracion(), 500); // Verifica que la duración del pulso sea 500 ms.
+    /// ```
+    pub fn set_pulso_duracion(&mut self, n: u32) -> &mut Self {
+        self.pulso_duracion.set(n, "pulsos_duracion");
         self
     }
 
-    pub fn set_pulsos(&mut self, n:u32)->&mut Self{
-        self.pulsos = n;
+    /// Establece el número total de pulsos por ración.
+    ///
+    /// # Parámetros:
+    /// - `n`: El número total de pulsos por ración.
+    ///
+    /// # Retorna:
+    /// Una referencia mutable al objeto `Racion` para permitir el encadenamiento de llamadas.
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let mut racion = Racion::new();
+    /// racion.set_pulsos(10); // Establece 10 pulsos por ración.
+    /// assert_eq!(racion.get_pulsos(), 10); // Verifica que el número de pulsos sea 10.
+    /// ```
+    pub fn set_pulsos(&mut self, n: u32) -> &mut Self {
+        self.pulsos.set(n, "pulsos");
         self
     }
 
-    pub fn set_pulso_espera(&mut self, n:u32)->&mut Self{
-        self.pulso_espera = n;
+    /// Establece el tiempo de espera entre pulsos en milisegundos.
+    ///
+    /// # Parámetros:
+    /// - `n`: El tiempo de espera entre pulsos en milisegundos.
+    ///
+    /// # Retorna:
+    /// Una referencia mutable al objeto `Racion` para permitir el encadenamiento de llamadas.
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let mut racion = Racion::new();
+    /// racion.set_pulso_espera(100); // Establece el tiempo de espera entre pulsos a 100 ms.
+    /// assert_eq!(racion.get_pulso_espera(), 100); // Verifica que el tiempo de espera sea 100 ms.
+    /// ```
+    pub fn set_pulso_espera(&mut self, n: u32) -> &mut Self {
+        self.pulso_espera.set(n, "pulsos_espera");
         self
     }
 
-    pub fn get_pulsos(&self)->u32{
-        self.pulsos
+    /// Obtiene el número total de pulsos por ración.
+    ///
+    /// # Retorna:
+    /// El número total de pulsos por ración (de tipo `u32`).
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let racion = Racion::new();
+    /// assert_eq!(racion.get_pulsos(), 0); // Debería ser 0 por defecto.
+    /// ```
+    pub fn get_pulsos(&self) -> u32 {
+        self.pulsos.get()
     }
 
-    pub fn get_pulso_espera(&self)->u32 {
-        self.pulso_espera
+    /// Obtiene el tiempo de espera entre pulsos en milisegundos.
+    ///
+    /// # Retorna:
+    /// El tiempo de espera entre pulsos (de tipo `u32`).
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let racion = Racion::new();
+    /// assert_eq!(racion.get_pulso_espera(), 0); // Debería ser 0 por defecto.
+    /// ```
+    pub fn get_pulso_espera(&self) -> u32 {
+        self.pulso_espera.get()
     }
 
-    pub fn get_pulso_duracion(&self)->u32{
-        self.pulso_duracion
+    /// Obtiene la duración de cada pulso en milisegundos.
+    ///
+    /// # Retorna:
+    /// La duración del pulso en milisegundos (de tipo `u32`).
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let racion = Racion::new();
+    /// assert_eq!(racion.get_pulso_duracion(), 0); // Debería ser 0 por defecto.
+    /// ```
+    pub fn get_pulso_duracion(&self) -> u32 {
+        self.pulso_duracion.get()
     }
 
-    pub fn get_all(&self)->[u32;3]{
-        [self.pulsos, self.pulso_duracion, self.pulso_espera]
+    /// Obtiene todos los parámetros de la ración como un array de 3 elementos:
+    /// - Pulsos
+    /// - Duración del pulso
+    /// - Tiempo de espera entre pulsos
+    ///
+    /// # Retorna:
+    /// Un array de tres elementos (`[u32; 3]`), representando los pulsos, la duración del pulso y el tiempo de espera entre pulsos.
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let racion = Racion::new();
+    /// let parametros = racion.get_all();
+    /// assert_eq!(parametros, [0, 0, 0]); // Todos los valores deberían ser 0 por defecto.
+    /// ```
+    pub fn get_all(&self) -> [u32; 3] {
+        [
+            self.pulsos.get(),
+            self.pulso_duracion.get(),
+            self.pulso_espera.get(),
+        ]
     }
 
-    pub fn get_id(&self)->Uuid {
+    /// Obtiene el identificador único de la ración.
+    ///
+    /// # Retorna:
+    /// El identificador único de la ración (de tipo `Uuid`).
+    ///
+    /// # Ejemplo:
+    /// ```
+    /// let racion = Racion::new();
+    /// let id = racion.get_id();
+    /// println!("El ID de la ración es: {}", id);
+    /// ```
+    pub fn get_id(&self) -> Uuid {
         self.id
     }
 }
