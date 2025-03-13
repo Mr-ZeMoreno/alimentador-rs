@@ -1,42 +1,27 @@
-mod traits;
-
-mod utils;
-
-use traits::debug::{Print, PrintConArg};
-use utils::{sleep, Rango};
-
-mod racion;
-use racion::Racion;
-
-mod silo;
-use silo::Silo;
-
-mod programa;
-use programa::Programa;
-
-mod dosificador;
-use dosificador::Dosificador;
-
-mod soplador;
-use soplador::Soplador;
+use hardware::dosificador::Dosificador;
+use hardware::silo::Silo;
+use hardware::soplador::Soplador;
+use system::ciclo::Ciclo;
+use system::programa::Programa;
+use system::racion::Racion;
 
 fn main() {
-    let mut racion1 = Racion::new();
-    racion1
+    let mut ciclo1 = Ciclo::new();
+    ciclo1
         .set_pulsos(50)
         .set_pulso_duracion(5000)
         .set_pulso_espera(8000);
 
-    let mut racion2 = Racion::new();
-    racion2
+    let mut ciclo2 = Ciclo::new();
+    ciclo2
         .set_pulsos(20)
         .set_pulso_duracion(3000)
         .set_pulso_espera(4000);
 
-    let mut programa = Programa::new(vec![&racion1, &racion2, &racion1, &racion1]);
+    let mut racion = Racion::new(vec![&ciclo1, &ciclo2, &ciclo1, &ciclo1]);
 
     let mut doser: Dosificador = Dosificador::new();
-    let mut soplador: Soplador = Soplador::new(); /////////////////////////////////////
+    let mut soplador: Soplador = Soplador::new();
 
     let mut silo: Silo = Silo::new();
 
@@ -44,39 +29,9 @@ fn main() {
 
     doser.set_entrega(2).set_estado(false);
 
-    programa.set_racion_espera(60000);
+    racion.set_ciclo_espera(60000);
 
-    for (i, racion) in programa.get_raciones().iter().enumerate() {
-        soplador.set_estado(true);
+    let mut programa: Programa = Programa::new(&mut racion);
 
-        let id = racion.get_id();
-        println!("[Ración: {}][Tipo: {}]: En Ejecución", i + 1, id);
-
-        let [pulsos, pulso_duracion, pulso_espera]: [u32; 3] = racion.get_all();
-
-        if pulso_duracion == 0 || pulsos == 0 || pulso_espera == 0 {
-            break;
-        }
-
-        println!("Iniciando...");
-        racion.print();
-
-        for _pulso in 1..pulsos + 1 {
-            let entregado = doser.get_entrega() * (pulso_duracion / 1000);
-
-            doser.set_estado(true).print();
-            silo.entregar_pulso(entregado).print(entregado);
-
-            sleep(u64::from(pulso_duracion));
-
-            doser.set_estado(false).print();
-            sleep(u64::from(pulso_espera));
-        }
-        println!(
-            "Ración {}: En Espera... Duración {}s",
-            id,
-            programa.get_racion_espera()
-        );
-        sleep(u64::from(programa.get_racion_espera()));
-    }
+    programa.iniciar(&mut soplador, &mut doser, &mut silo);
 }

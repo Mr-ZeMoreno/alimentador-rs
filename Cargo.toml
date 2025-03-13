@@ -3,7 +3,16 @@ name = "f1"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = [
+    "crates/hardware", "crates/system", 
+    "crates/utils"
+, "types"]
+
+
 [dependencies]
+hardware = {path= "./crates/hardware", version="0.1.0"}
+system = {path= "./crates/system", version="0.1.0"}
 
 [dependencies.uuid]
 version = "1.15.1"

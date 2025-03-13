@@ -162,6 +162,8 @@ name = "f1"
 version = "0.1.0"
 dependencies = [
  "criterion",
+ "hardware",
+ "system",
  "uuid",
 ]
 
@@ -182,6 +184,14 @@ name = "half"
 version = "1.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b43ede17f21864e81be2fa654110bf1e793774238d86ef8555c37e6519c0403"
+
+[[package]]
+name = "hardware"
+version = "0.1.0"
+dependencies = [
+ "utils",
+ "uuid",
+]
 
 [[package]]
 name = "hermit-abi"
@@ -432,6 +442,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "system"
+version = "0.1.0"
+dependencies = [
+ "hardware",
+ "types",
+ "utils",
+ "uuid",
+]
+
+[[package]]
 name = "textwrap"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -451,6 +471,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "types"
+version = "0.1.0"
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -461,6 +485,10 @@ name = "unicode-width"
 version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7dd6e30e90baa6f72411720665d41d89b9a3d039dc45b8faea1ddd07f617f6af"
+
+[[package]]
+name = "utils"
+version = "0.1.0"
 
 [[package]]
 name = "uuid"

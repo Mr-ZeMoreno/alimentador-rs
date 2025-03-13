@@ -1,4 +1,4 @@
-use crate::sleep;
+use utils::utils::sleep;
 use uuid::Uuid;
 
 /// Representa un **Soplador**, que puede ser encendido o apagado y tener su potencia ajustada.

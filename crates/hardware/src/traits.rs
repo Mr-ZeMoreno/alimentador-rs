@@ -1,8 +1,6 @@
-use crate::Dosificador;
-use crate::Programa;
-use crate::Racion;
-use crate::Silo;
-use crate::Soplador;
+use crate::dosificador::Dosificador;
+use crate::silo::Silo;
+use crate::soplador::Soplador;
 
 /// El trait `Print` permite que un tipo implemente el método `print`
 /// para mostrar su estado de manera legible.
@@ -64,51 +62,6 @@ impl Print for Dosificador {
             }
         };
         println!("\nDosificador [{}]: {}\n", self.get_id(), estado);
-        self
-    }
-}
-
-impl Print for Racion {
-    /// Imprime la información detallada de una ración.
-    ///
-    /// Muestra el `id`, los `pulsos`, la duración del pulso en milisegundos (`DP`),
-    /// y el tiempo de espera entre pulsos (`EP`).
-    ///
-    /// # Ejemplo:
-    /// ```rust
-    /// let racion = Racion::new();
-    /// racion.print();
-    /// ```
-    fn print(&self) -> &Racion {
-        println!(
-            "\n[Ración][{}][{} P][{}ms DP][{}ms EP]\n",
-            self.get_id(),
-            self.get_pulsos(),
-            self.get_pulso_duracion(),
-            self.get_pulso_espera()
-        );
-        self
-    }
-}
-
-impl<'a> Print for Programa<'a> {
-    /// Imprime los detalles del programa, incluyendo su `id` y los `id`s de las raciones asociadas.
-    ///
-    /// # Ejemplo:
-    /// ```rust
-    /// let programa = Programa::new(vec![&racion1, &racion2]);
-    /// programa.print();
-    /// ```
-    fn print(&self) -> &Programa<'a> {
-        println!(
-            "\n[Programa][{}]: Raciones <[{}]>",
-            self.get_id(),
-            self.get_raciones()
-                .iter()
-                .map(|racion| racion.get_id().to_string())
-                .collect::<Vec<String>>()
-                .join(", ")
-        );
         self
     }
 }
