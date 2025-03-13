@@ -1,3 +1,11 @@
+use std::collections::HashMap;
+
+#[derive(Hash, Eq, PartialEq)]
+pub enum Key {
+    Min,
+    Max,
+}
+
 /// Estructura que representa un rango de valores, con un valor inicial
 /// que debe estar dentro de los límites definidos por el rango.
 ///
@@ -82,8 +90,9 @@ impl Rango {
         self.valor
     }
 
-    pub fn get_rango(&self) -> [u32; 2] {
-        [self.min, self.max]
+    pub fn get_rango(&self) -> HashMap<Key, u32> {
+        // No cambiar ya que he utilizado unwrap en varios lugares asegurando que esta funcion siempre retornara un hashmap con key::min y key::max
+        HashMap::from([(Key::Min, self.min), (Key::Max, self.max)])
     }
 
     pub fn set(&mut self, valor: u32, tag: &str) {
@@ -98,7 +107,9 @@ impl Rango {
             Err(_) => {
                 println!(
                     "Error: Fuera del rango ({};{}), el valor no ha cambiado. Valor actual: {}",
-                    rango[0], rango[1], valor_actual
+                    rango.get(&Key::Min).unwrap(),
+                    rango.get(&Key::Max).unwrap(),
+                    valor_actual
                 );
             }
         }
