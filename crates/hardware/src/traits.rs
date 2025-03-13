@@ -61,7 +61,7 @@ impl Print for Dosificador {
                 "Apagado"
             }
         };
-        println!("\nDosificador [{}]: {}\n", self.get_id(), estado);
+        println!("\n[Dosificador][{}]: {}\n", self.get_id(), estado);
         self
     }
 }
@@ -83,7 +83,8 @@ impl PrintConArg for Silo {
     /// ```
     fn print(&self, pulso: u32) -> &Silo {
         println!(
-            "\nSilo: {} - Historico: {}",
+            "\n[Silo][{}]: {} - Historico: {}",
+            self.get_id(),
             self.get_alimento(),
             self.get_historico()
         );
