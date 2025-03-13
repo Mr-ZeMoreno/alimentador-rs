@@ -23,7 +23,7 @@ fn main() {
     let mut doser: Dosificador = Dosificador::new();
     let mut soplador: Soplador = Soplador::new();
 
-    let mut silo: Silo = Silo::new();
+    let mut silo: Silo = Silo::new(24000);
 
     silo.set_alimento(24000);
 
