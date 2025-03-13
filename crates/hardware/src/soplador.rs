@@ -1,6 +1,8 @@
 use utils::utils::sleep;
 use uuid::Uuid;
 
+use types::rango::Rango;
+
 /// Representa un **Soplador**, que puede ser encendido o apagado y tener su potencia ajustada.
 ///
 /// La estructura `Soplador` tiene las siguientes propiedades:
@@ -12,7 +14,7 @@ pub struct Soplador {
     estado: bool,
 
     /// La potencia del soplador, con un rango de 0 a 100.
-    potencia: u8,
+    potencia: Rango,
 
     /// El identificador único del soplador.
     id: Uuid,
@@ -30,7 +32,7 @@ impl Soplador {
     pub fn new() -> Self {
         Self {
             estado: false,
-            potencia: 0,
+            potencia: Rango::new(0, 100, 0).unwrap(),
             id: Uuid::new_v4(),
         }
     }
@@ -78,8 +80,8 @@ impl Soplador {
     /// soplador.set_potencia(75); // Establece la potencia del soplador al 75%.
     /// assert_eq!(soplador.get_potencia(), 75); // Verifica que la potencia ahora es 75.
     /// ```
-    pub fn set_potencia(&mut self, n: u8) -> &mut Soplador {
-        self.potencia = n;
+    pub fn set_potencia(&mut self, n: u32) -> &mut Soplador {
+        self.potencia.set(n, "[Soplador]");
         self
     }
 
@@ -108,8 +110,8 @@ impl Soplador {
     /// let soplador = Soplador::new();
     /// assert_eq!(soplador.get_potencia(), 0); // La potencia es 0 por defecto.
     /// ```
-    pub fn get_potencia(&self) -> u8 {
-        self.potencia
+    pub fn get_potencia(&self) -> u32 {
+        self.potencia.get()
     }
 
     /// Obtiene el identificador único (UUID) del soplador.

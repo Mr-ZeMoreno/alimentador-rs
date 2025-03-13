@@ -1,3 +1,4 @@
+use types::rango::{Key, Rango};
 use uuid::Uuid;
 
 /// La estructura `Silo` representa un silo de almacenamiento de alimento.
@@ -11,7 +12,7 @@ use uuid::Uuid;
 ///
 /// # Ejemplo:
 /// ```
-/// let mut silo = Silo::new();
+/// let mut silo = Silo::new(24000);
 /// silo.set_alimento(1000); // Establece la cantidad de alimento a 1000 kg.
 /// println!("Alimento actual: {}", silo.get_alimento()); // Imprime 1000.
 /// silo.entregar_pulso(200); // Reduce el alimento por 200 kg.
@@ -20,19 +21,11 @@ use uuid::Uuid;
 pub struct Silo {
     /// La cantidad de alimento en kilogramos actualmente almacenado en el silo.
     ///
-    /// * Máximo: 4,294,967,295 kg.
-    alimento: u32,
+    alimento: Rango,
 
     /// El total de alimento en kilogramos que ha pasado por el silo históricamente.
     ///
-    /// * Máximo: 4,294,967,295 kg.
-    historico: u32,
-
-    /// La capacidad máxima que puede contener el silo (en kilogramos).
-    /// Por lo general se trabaja con silos de 25000 kg.
-    ///
-    /// * Máximo: 65,535 kg.
-    capacidad: u32,
+    historico: Rango,
 
     /// El identificador único del silo.
     id: Uuid,
@@ -45,37 +38,16 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let silo = Silo::new();
+    /// let silo = Silo::new(24000);
     /// ```
     ///
-    /// Esto creará un silo nuevo con atributos `alimento: 0`, `historico: 0`, `capacidad: 0` y `id: Uuid::new_v4()`.
-    pub fn new() -> Self {
+    /// Esto creará un silo nuevo con atributos `alimento: 0`, `historico: 0`, `capacidad: 24000` y `id: Uuid::new_v4()`.
+    pub fn new(capacidad: u32) -> Self {
         Self {
-            alimento: 0,
-            historico: 0,
-            capacidad: 0,
+            alimento: Rango::new(0, capacidad, 0).unwrap(),
+            historico: Rango::new(0, 4294967295, 0).unwrap(),
             id: Uuid::new_v4(),
         }
-    }
-
-    /// Verifica si se puede agregar más alimento al silo sin exceder su capacidad máxima.
-    ///
-    /// # Parámetros:
-    /// - `n`: La cantidad de alimento (en kilogramos) que se quiere agregar al silo.
-    ///
-    /// # Retorna:
-    /// `true` si es posible agregar `n` kilogramos sin superar la capacidad del silo,
-    /// `false` en caso contrario.
-    ///
-    /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new();
-    /// silo.capacidad = 5000; // Establecemos la capacidad máxima del silo a 5000 kg.
-    /// assert!(silo.verificar_llenado(4000)); // Devuelve `true` porque podemos agregar 4000 kg sin exceder la capacidad.
-    /// assert!(!silo.verificar_llenado(6000)); // Devuelve `false` porque no podemos agregar 6000 kg.
-    /// ```
-    fn verificar_llenado(&self, n: u32) -> bool {
-        n + self.alimento <= self.capacidad
     }
 
     /// Realiza una entrega de alimento desde el silo.
@@ -90,7 +62,7 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let mut silo = Silo::new();
+    /// let mut silo = Silo::new(24000);
     /// silo.set_alimento(1000);
     /// silo.entregar_pulso(200);
     /// assert_eq!(silo.get_alimento(), 800); // La cantidad de alimento disminuye a 800 kg.
@@ -109,12 +81,14 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let mut silo = Silo::new();
+    /// let mut silo = Silo::new(24000);
     /// silo.set_historico(1000);
     /// println!("Historico: {}", silo.get_historico()); // Imprime 1000.
     /// ```
     fn set_historico(&mut self, n: u32) {
-        self.historico += n;
+        let mut x = self.historico.get();
+        x += n;
+        self.historico.set(x, "[Silo]");
     }
 
     /// Establece la cantidad de alimento actual en el silo.
@@ -129,15 +103,15 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let mut silo = Silo::new();
+    /// let mut silo = Silo::new(24000);
     /// silo.set_alimento(1000); // Establece la cantidad de alimento a 1000 kg.
     /// println!("Alimento actual: {}", silo.get_alimento()); // Imprime 1000.
     /// ```
     pub fn set_alimento(&mut self, n: u32) -> &mut Silo {
-        if self.alimento < n {
-            self.set_historico(n - self.alimento);
+        if self.alimento.get() < n {
+            self.set_historico(n - self.alimento.get());
         }
-        self.alimento = n;
+        self.alimento.set(n, "[Silo]");
         self
     }
 
@@ -148,12 +122,12 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let mut silo = Silo::new();
+    /// let mut silo = Silo::new(24000);
     /// silo.set_alimento(1000);
     /// assert_eq!(silo.get_alimento(), 1000);
     /// ```
     pub fn get_alimento(&self) -> u32 {
-        self.alimento
+        self.alimento.get()
     }
 
     /// Obtiene el total histórico de alimento que ha pasado por el silo.
@@ -163,12 +137,12 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let mut silo = Silo::new();
+    /// let mut silo = Silo::new(24000);
     /// silo.set_historico(1000);
     /// assert_eq!(silo.get_historico(), 1000);
     /// ```
     pub fn get_historico(&self) -> u32 {
-        self.historico
+        self.historico.get()
     }
 
     /// Obtiene la cantidad de alimento máximo que se puede agregar al silo en dicho momento, es decir devuelve el espacio restante.
@@ -179,11 +153,12 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let mut silo = Silo::new();
+    /// let mut silo = Silo::new(24000);
     /// println!("El espacio restante es: {} y la capacidad máxima es: {}", self.get_espacio_restante(), self.get_capacidad());
     /// ```
-    fn get_espacio_restante(&self) -> u32 {
-        self.capacidad - self.alimento
+    fn _get_espacio_restante(&self) -> u32 {
+        // En este caso puedo asegurar que siempre habrá un key::max
+        self.alimento.get_rango().get(&Key::Max).unwrap() - self.alimento.get()
     }
 
     /// Obtiene el identificador único de la ración.
@@ -193,7 +168,7 @@ impl Silo {
     ///
     /// # Ejemplo:
     /// ```
-    /// let silo = Silo::new();
+    /// let silo = Silo::new(24000);
     /// let id = silo.get_id();
     /// println!("El ID del silo es: {}", id);
     /// ```
