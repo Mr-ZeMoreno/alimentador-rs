@@ -21,10 +21,10 @@ impl Print for Soplador {
     /// Muestra el `id`, la `potencia`, y si está `encendido` o `apagado`.
     ///
     /// # Ejemplo:
-    /// ```rust
-    /// let soplador = Soplador::new();
-    /// soplador.print();
-    /// ```
+    ///! ```rust
+    ///! let soplador = Soplador::new();
+    ///! soplador.print();
+    ///! ```
     fn print(&self) -> &Soplador {
         let estado: &'static str = {
             if self.get_estado() {
@@ -49,10 +49,10 @@ impl Print for Dosificador {
     /// Muestra el `id` y si el dosificador está `encendido` o `apagado`.
     ///
     /// # Ejemplo:
-    /// ```rust
-    /// let dosificador = Dosificador::new();
-    /// dosificador.print();
-    /// ```
+    ///! ```rust
+    ///! let dosificador = Dosificador::new();
+    ///! dosificador.print();
+    ///! ```
     fn print(&self) -> &Dosificador {
         let estado: &'static str = {
             if self.get_estado() {
@@ -76,11 +76,11 @@ impl PrintConArg for Silo {
     /// Una referencia al silo para permitir el encadenamiento de métodos.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new();
-    /// silo.set_alimento(1000);
-    /// silo.print(200);
-    /// ```
+    ///! ```
+    ///! let mut silo = Silo::new();
+    ///! silo.set_alimento(1000);
+    ///! silo.print(200);
+    ///! ```
     fn print(&self, pulso: u32) -> &Silo {
         println!(
             "\n[Silo][{}]: {} - Historico: {}",

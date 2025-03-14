@@ -11,13 +11,13 @@ use uuid::Uuid;
 /// La estructura incluye métodos para manejar y monitorear el llenado y la entrega de alimento.
 ///
 /// # Ejemplo:
-/// ```
-/// let mut silo = Silo::new(24000);
-/// silo.set_alimento(1000); // Establece la cantidad de alimento a 1000 kg.
-/// println!("Alimento actual: {}", silo.get_alimento()); // Imprime 1000.
-/// silo.entregar_pulso(200); // Reduce el alimento por 200 kg.
-/// println!("Alimento restante: {}", silo.get_alimento()); // Imprime 800.
-/// ```
+///! ```
+///! let mut silo = Silo::new(24000);
+///! silo.set_alimento(1000); // Establece la cantidad de alimento a 1000 kg.
+///! println!("Alimento actual: {}", silo.get_alimento()); // Imprime 1000.
+///! silo.entregar_pulso(200); // Reduce el alimento por 200 kg.
+///! println!("Alimento restante: {}", silo.get_alimento()); // Imprime 800.
+///! ```
 pub struct Silo {
     /// La cantidad de alimento en kilogramos actualmente almacenado en el silo.
     ///
@@ -37,9 +37,9 @@ impl Silo {
     /// Asigna un `UUID` único para cada instancia de silo.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let silo = Silo::new(24000);
-    /// ```
+    ///! ```
+    ///! let silo = Silo::new(24000);
+    ///! ```
     ///
     /// Esto creará un silo nuevo con atributos `alimento: 0`, `historico: 0`, `capacidad: 24000` y `id: Uuid::new_v4()`.
     pub fn new(capacidad: u32) -> Self {
@@ -61,12 +61,12 @@ impl Silo {
     /// Una referencia mutable al silo para permitir encadenamiento de métodos.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new(24000);
-    /// silo.set_alimento(1000);
-    /// silo.entregar_pulso(200);
-    /// assert_eq!(silo.get_alimento(), 800); // La cantidad de alimento disminuye a 800 kg.
-    /// ```
+    ///! ```
+    ///! let mut silo = Silo::new(24000);
+    ///! silo.set_alimento(1000);
+    ///! silo.entregar_pulso(200);
+    ///! assert_eq!(silo.get_alimento(), 800); // La cantidad de alimento disminuye a 800 kg.
+    ///! ```
     pub fn entregar_pulso(&mut self, pulso: u32) -> &mut Silo {
         self.set_alimento(self.get_alimento() - pulso)
     }
@@ -80,11 +80,11 @@ impl Silo {
     /// - `n`: Los kilogramos de alimento que se van a agregar al histórico.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new(24000);
-    /// silo.set_historico(1000);
-    /// println!("Historico: {}", silo.get_historico()); // Imprime 1000.
-    /// ```
+    ///! ```
+    ///! let mut silo = Silo::new(24000);
+    ///! silo.set_historico(1000);
+    ///! println!("Historico: {}", silo.get_historico()); // Imprime 1000.
+    ///! ```
     fn set_historico(&mut self, n: u32) {
         let mut x = self.historico.get();
         x += n;
@@ -102,11 +102,11 @@ impl Silo {
     /// Una referencia mutable a la instancia actual de `Silo` para permitir el encadenamiento de métodos.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new(24000);
-    /// silo.set_alimento(1000); // Establece la cantidad de alimento a 1000 kg.
-    /// println!("Alimento actual: {}", silo.get_alimento()); // Imprime 1000.
-    /// ```
+    ///! ```
+    ///! let mut silo = Silo::new(24000);
+    ///! silo.set_alimento(1000); // Establece la cantidad de alimento a 1000 kg.
+    ///! println!("Alimento actual: {}", silo.get_alimento()); // Imprime 1000.
+    ///! ```
     pub fn set_alimento(&mut self, n: u32) -> &mut Silo {
         if self.alimento.get() < n {
             self.set_historico(n - self.alimento.get());
@@ -121,11 +121,11 @@ impl Silo {
     /// La cantidad de alimento en kilogramos.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new(24000);
-    /// silo.set_alimento(1000);
-    /// assert_eq!(silo.get_alimento(), 1000);
-    /// ```
+    ///! ```
+    ///! let mut silo = Silo::new(24000);
+    ///! silo.set_alimento(1000);
+    ///! assert_eq!(silo.get_alimento(), 1000);
+    ///! ```
     pub fn get_alimento(&self) -> u32 {
         self.alimento.get()
     }
@@ -136,11 +136,11 @@ impl Silo {
     /// El total histórico de alimento en kilogramos.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new(24000);
-    /// silo.set_historico(1000);
-    /// assert_eq!(silo.get_historico(), 1000);
-    /// ```
+    ///! ```
+    ///! let mut silo = Silo::new(24000);
+    ///! silo.set_historico(1000);
+    ///! assert_eq!(silo.get_historico(), 1000);
+    ///! ```
     pub fn get_historico(&self) -> u32 {
         self.historico.get()
     }
@@ -152,10 +152,10 @@ impl Silo {
     /// `false` en caso contrario.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut silo = Silo::new(24000);
-    /// println!("El espacio restante es: {} y la capacidad máxima es: {}", self.get_espacio_restante(), self.get_capacidad());
-    /// ```
+    ///! ```
+    ///! let mut silo = Silo::new(24000);
+    ///! println!("El espacio restante es: {} y la capacidad máxima es: {}", self.get_espacio_restante(), self.get_capacidad());
+    ///! ```
     fn _get_espacio_restante(&self) -> u32 {
         // En este caso puedo asegurar que siempre habrá un key::max
         self.alimento.get_rango().get(&Key::Max).unwrap() - self.alimento.get()
@@ -167,11 +167,11 @@ impl Silo {
     /// El identificador único de la ración (de tipo `Uuid`).
     ///
     /// # Ejemplo:
-    /// ```
-    /// let silo = Silo::new(24000);
-    /// let id = silo.get_id();
-    /// println!("El ID del silo es: {}", id);
-    /// ```
+    ///! ```
+    ///! let silo = Silo::new(24000);
+    ///! let id = silo.get_id();
+    ///! println!("El ID del silo es: {}", id);
+    ///! ```
     pub fn get_id(&self) -> Uuid {
         self.id
     }
