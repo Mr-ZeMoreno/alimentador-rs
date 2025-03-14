@@ -10,12 +10,12 @@
 
 ## Traits
 - **Prints**
-- [ ] Soplador
-    - [ ] Debe ser encendido o apago en función del estado
-    - [ ] Debe mostrar la estructura [Soplador][id][potencia]: -- [estado] --
-- [ ] Dosificador
-    - [ ] Debe ser encendido o apago en función del estado
-    - [ ] Debe mostrar la estructura [Dosificador][id][entrega]: -- [estado] --
+- [x] Soplador
+    - [x] Debe ser encendido o apago en función del estado
+    - [x] Debe mostrar la estructura [Soplador][id][potencia]: -- [estado] --
+- [x] Dosificador
+    - [x] Debe ser encendido o apago en función del estado
+    - [x] Debe mostrar la estructura [Dosificador][id][entrega]: -- [estado] --
 - **PrintsConArg**
-- [ ] Silo
-    - [ ] Debe mostrar la estructura [Silo][id][Historico][Alimento]: -- [entregado] --
+- [x] Silo
+    - [x] Debe mostrar la estructura [Silo][id][Historico][Alimento]: -- [entregado] --

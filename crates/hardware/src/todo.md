@@ -5,7 +5,7 @@
 
 ## Soplador
 **Implementar propagacion de errores a las funciones setter**
-- [ ] Crear errores personalizados (Ver todo.md de carpeta `./errors`)
+- [x] Crear errores personalizados (Ver todo.md de carpeta `./errors`)
 - **set_potencia**
     - [x] Debe retornar Result<(), crate::errors::SopladorError>
     - [x] Debe manejar errores con `match`
