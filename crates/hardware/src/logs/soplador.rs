@@ -1,4 +1,4 @@
-use crate::log::Print;
+use crate::logs::Print;
 use crate::soplador::Soplador;
 impl Print for Soplador {
     /// Imprime el estado del soplador.

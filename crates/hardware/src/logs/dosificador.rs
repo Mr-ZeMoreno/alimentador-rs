@@ -1,5 +1,5 @@
 use crate::dosificador::Dosificador;
-use crate::log::Print;
+use crate::logs::Print;
 
 impl Print for Dosificador {
     /// Imprime el estado del dosificador.

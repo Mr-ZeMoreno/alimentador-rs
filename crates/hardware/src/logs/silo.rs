@@ -1,4 +1,4 @@
-use crate::log::Print;
+use crate::logs::Print;
 use crate::silo::Silo;
 
 impl Print for Silo {
