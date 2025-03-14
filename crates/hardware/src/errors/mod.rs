@@ -29,3 +29,17 @@ impl PartialEq for SopladorError {
         }
     }
 }
+#[derive(Debug)]
+pub enum SelectoraError {
+    FueraDeRango,
+    ErrorInesperado,
+}
+impl PartialEq for SelectoraError {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (SelectoraError::FueraDeRango, SelectoraError::FueraDeRango) => true,
+            (SelectoraError::ErrorInesperado, SelectoraError::ErrorInesperado) => true,
+            _ => false,
+        }
+    }
+}
