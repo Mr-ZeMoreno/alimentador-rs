@@ -15,14 +15,12 @@
 - [x] test_get_estado
     - [x] Debe obtener un booleano
     - [x] Debe actualizarse
-- [ ] test_get_potencia
+- [x] test_get_potencia
     - [x] Debe obtener un valor entre [0, 100]
     - [x] Debe actualizarse
-- [ ] test_get_id
+- [x] test_get_id
     - [x] Debe obtener un uuid v4
     - [x] Debe ser único
-- [ ] test_chain_methods
-    - [ ] Debe poder hacerse chaining
 
 - [ ] ** Documentar para `cargo doc`**
 
