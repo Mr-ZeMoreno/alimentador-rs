@@ -9,8 +9,6 @@
 - [ ]
 
 ## Traits
-- [ ] Crear archivo traits.rs en carpeta test
-
 - **Prints**
 - [ ] Soplador
     - [ ] Debe ser encendido o apago en función del estado
