@@ -67,8 +67,27 @@ impl Silo {
     ///! silo.entregar_pulso(200);
     ///! assert_eq!(silo.get_alimento(), 800); // La cantidad de alimento disminuye a 800 kg.
     ///! ```
-    pub fn entregar_pulso(&mut self, pulso: u32) -> &mut Silo {
-        self.set_alimento(self.get_alimento() - pulso)
+    pub fn entregar_pulso(&mut self, pulso: u32) -> Result<(), crate::errors::SiloError> {
+        // Usa el tipo correcto de error
+        let alimento_actual = self.get_alimento();
+
+        if pulso > alimento_actual {
+            return Err(crate::errors::SiloError::SinAlimento);
+        }
+
+        match self.set_alimento(alimento_actual - pulso) {
+            Ok(()) => Ok(()),
+            Err(crate::errors::SiloError::FueraDeRango) => {
+                // Asegúrate de que el error coincida
+                println!("Error: Intento de set fuera del rango.");
+                Err(crate::errors::SiloError::SinAlimento)
+            }
+            Err(_) => {
+                // Error inesperado
+                println!("Error inesperado al intentar actualizar el alimento.");
+                Err(crate::errors::SiloError::ErrorInesperado)
+            }
+        }
     }
 }
 
@@ -85,10 +104,13 @@ impl Silo {
     ///! silo.set_historico(1000);
     ///! println!("Historico: {}", silo.get_historico()); // Imprime 1000.
     ///! ```
-    fn set_historico(&mut self, n: u32) {
+    fn set_historico(&mut self, n: u32) -> Result<(), crate::errors::SiloError> {
         let mut x = self.historico.get();
         x += n;
-        self.historico.set(x, "[Silo]");
+        match self.historico.set(x, "[Silo]") {
+            Ok(()) => Ok(()),
+            Err(_) => Err(crate::errors::SiloError::FueraDeRango),
+        }
     }
 
     /// Establece la cantidad de alimento actual en el silo.
@@ -107,12 +129,17 @@ impl Silo {
     ///! silo.set_alimento(1000); // Establece la cantidad de alimento a 1000 kg.
     ///! println!("Alimento actual: {}", silo.get_alimento()); // Imprime 1000.
     ///! ```
-    pub fn set_alimento(&mut self, n: u32) -> &mut Silo {
+    pub fn set_alimento(&mut self, n: u32) -> Result<(), crate::errors::SiloError> {
         if self.alimento.get() < n {
-            self.set_historico(n - self.alimento.get());
+            if let Err(_) = self.set_historico(n - self.alimento.get()) {
+                return Err(crate::errors::SiloError::FueraDeRango);
+            }
         }
-        self.alimento.set(n, "[Silo]");
-        self
+
+        match self.alimento.set(n, "[Silo]") {
+            Ok(()) => Ok(()),
+            Err(_) => Err(crate::errors::SiloError::FueraDeRango),
+        }
     }
 
     /// Obtiene la cantidad actual de alimento almacenado en el silo.
