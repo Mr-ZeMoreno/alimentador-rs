@@ -12,7 +12,7 @@
 - [x] Crear `pub enum SopladorError`
     - [x] Error `FueraDeRango`
 
-- [ ] Crear implementacion `PartialEq` para los errores (para comparar errores)
+- [x] Crear implementacion `PartialEq` para los errores (para comparar errores)
 
 ## Traits
 - [ ]
