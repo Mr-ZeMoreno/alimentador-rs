@@ -1,7 +1,7 @@
 use utils::utils::sleep;
 use uuid::Uuid;
 
-use types::rango::Rango;
+use types::rango::{Rango, RangoError};
 
 /// Representa un **Soplador**, que puede ser encendido o apagado y tener su potencia ajustada.
 ///
@@ -78,13 +78,13 @@ impl Soplador {
     ///! ```
     ///! let mut soplador = Soplador::new();
     ///! soplador.set_potencia(75); // Establece la potencia del soplador al 75%.
-    ///! assert_eq!(soplador.get_potencia(), 75); // Verifica que la potencia ahora es 75.
+    ///! assert_eq!(soplador.get_potencia(), 75).expect("Se intentó insertar una potencia superior al rango"); // Verifica que la potencia ahora es 75.
     ///! ```
-    pub fn set_potencia(&mut self, n: u32) -> &mut Soplador {
-        self.potencia
-            .set(n, "[Soplador]")
-            .expect("No se ha podido actualizar la potencia");
-        self
+    pub fn set_potencia(&mut self, n: u32) -> Result<(), crate::errors::SopladorError> {
+        match self.potencia.set(n, "[Soplador]") {
+            Ok(()) => Ok(()),
+            Err(RangoError::FueraDeRango) => Err(crate::errors::SopladorError::FueraDeRango),
+        }
     }
 
     /// Obtiene el estado actual del soplador (encendido o apagado).
