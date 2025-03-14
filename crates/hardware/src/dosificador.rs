@@ -3,6 +3,7 @@ use uuid::Uuid;
 pub struct Dosificador {
     // Capacidad de entrega en kg/s
     // Aproximar al entero mas cercano
+    // No es una caracteristica que deba modificarse
     entrega: u32,
 
     estado: bool,
@@ -11,17 +12,12 @@ pub struct Dosificador {
 }
 
 impl Dosificador {
-    pub fn new() -> Self {
+    pub fn new(entrega: u32) -> Self {
         Self {
-            entrega: 0,
+            entrega,
             estado: false,
             id: Uuid::new_v4(),
         }
-    }
-
-    pub fn set_entrega(&mut self, n: u32) -> &mut Dosificador {
-        self.entrega = n;
-        self
     }
     pub fn set_estado(&mut self, n: bool) -> &mut Dosificador {
         self.estado = n;
