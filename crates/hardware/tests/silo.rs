@@ -4,6 +4,22 @@ use hardware::silo::Silo;
 const CAPACIDAD_SILOS: u32 = 24000;
 const GRAMOS_PULSO: u32 = 25;
 
+// #[cfg(test)]
+// mod avisos {
+//     // Si no hay comentarios en ignore comentar este modulo
+//     #[test]
+//     #[ignore = "Por Favor Leer en TODO.md los test de silo"]
+//     fn archivo_test() {}
+
+//     #[test]
+//     #[ignore = "Por Favor Leer en TODO.md la implementación de silo"]
+//     fn archivo_implementacion() {}
+
+//     #[test]
+//     #[ignore = "Por Favor Leer en TODO.md los errores de silo"]
+//     fn archivo_errores() {}
+// }
+
 #[cfg(test)]
 mod silo {
     use super::*;
