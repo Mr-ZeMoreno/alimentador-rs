@@ -8,11 +8,11 @@ use crate::soplador::Soplador;
 /// # Métodos:
 /// - `print`: Imprime la información relevante del tipo en la consola.
 pub trait Print {
-    fn print(&self) -> &Self;
+    fn print(&self) -> String;
 }
 
 pub trait PrintConArg {
-    fn print(&self, arg: u32) -> &Self;
+    fn print(&self, arg: u32) -> String;
 }
 
 impl Print for Soplador {
@@ -25,21 +25,23 @@ impl Print for Soplador {
     ///! let soplador = Soplador::new();
     ///! soplador.print();
     ///! ```
-    fn print(&self) -> &Soplador {
-        let estado: &'static str = {
-            if self.get_estado() {
-                "Encendido"
-            } else {
-                "Apagado"
-            }
+    fn print(&self) -> String {
+        let estado = if self.get_estado() {
+            "Encendido"
+        } else {
+            "Apagado"
         };
-        println!(
-            "[Soplador][{}],[{}]: -- [{}] --",
+
+        let texto = format!(
+            "[Soplador][{}][{}%]: -- [{}] --",
             self.get_id(),
             self.get_potencia(),
             estado
         );
-        self
+
+        println!("{}", &texto);
+
+        texto
     }
 }
 
@@ -53,7 +55,7 @@ impl Print for Dosificador {
     ///! let dosificador = Dosificador::new();
     ///! dosificador.print();
     ///! ```
-    fn print(&self) -> &Dosificador {
+    fn print(&self) -> String {
         let estado: &'static str = {
             if self.get_estado() {
                 "Encendido"
@@ -61,12 +63,19 @@ impl Print for Dosificador {
                 "Apagado"
             }
         };
-        println!("\n[Dosificador][{}]: {}\n", self.get_id(), estado);
-        self
+
+        let texto = format!(
+            "[Dosificador][{}][{}]: -- [{}] --",
+            self.get_id(),
+            self.get_entrega(),
+            estado
+        );
+        println!("{}", texto);
+        texto
     }
 }
 
-impl PrintConArg for Silo {
+impl Print for Silo {
     /// Imprime la información del silo y la cantidad de alimento que se va a entregar.
     ///
     /// # Parámetros:
@@ -81,14 +90,15 @@ impl PrintConArg for Silo {
     ///! silo.set_alimento(1000);
     ///! silo.print(200);
     ///! ```
-    fn print(&self, pulso: u32) -> &Silo {
-        println!(
-            "\n[Silo][{}]: {} - Historico: {}",
+    fn print(&self) -> String {
+        let texto = format!(
+            "\n[Silo][{}][Actual: {}kg][Historico: {}kg]",
             self.get_id(),
             self.get_alimento(),
             self.get_historico()
         );
-        println!("Entregando {} kg\n", pulso);
-        self
+
+        println!("{}", texto);
+        texto
     }
 }
