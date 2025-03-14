@@ -81,7 +81,9 @@ impl Soplador {
     ///! assert_eq!(soplador.get_potencia(), 75); // Verifica que la potencia ahora es 75.
     ///! ```
     pub fn set_potencia(&mut self, n: u32) -> &mut Soplador {
-        self.potencia.set(n, "[Soplador]");
+        self.potencia
+            .set(n, "[Soplador]")
+            .expect("No se ha podido actualizar la potencia");
         self
     }
 
