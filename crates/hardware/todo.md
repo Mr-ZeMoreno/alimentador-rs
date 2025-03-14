@@ -1,26 +1,26 @@
 # Tests
 ## Soplador
-- [ ] test_creacion_soplador
+- [x] test_creacion_soplador
     - **Estados iniciales**
-    - [ ] El *estado* debe ser False
-    - [ ] La *potencia* debe ser 0
-    - [ ] La *id* debe ser un uuid_v4 **unica**
-- [ ] test_set_estado
-    - [ ] Solo debe aceptar booleanos
-    - [ ] Debe cambiar el estado
-- [ ] test_set_potencia
-    - [ ] Solo debe aceptar u32
-    - [ ] Debe cambiar la potencia
-    - [ ] Arroja error en valores fuera del rando [0, 100]
-- [ ] test_get_estado
-    - [ ] Debe obtener un booleano
-    - [ ] Debe actualizarse
+    - [x] El *estado* debe ser False
+    - [x] La *potencia* debe ser 0
+    - [x] La *id* debe ser un uuid_v4 **unica**
+- [x] test_set_estado
+    - [x] Solo debe aceptar booleanos
+    - [x] Debe cambiar el estado
+- [x] test_set_potencia
+    - [x] Solo debe aceptar u32
+    - [x] Debe cambiar la potencia
+    - [x] Arroja error en valores fuera del rando [0, 100]
+- [x] test_get_estado
+    - [x] Debe obtener un booleano
+    - [x] Debe actualizarse
 - [ ] test_get_potencia
-    - [ ] Debe obtener un valor entre [0, 100]
-    - [ ] Debe actualizarse
+    - [x] Debe obtener un valor entre [0, 100]
+    - [x] Debe actualizarse
 - [ ] test_get_id
-    - [ ] Debe obtener un uuid v4
-    - [ ] Debe ser único
+    - [x] Debe obtener un uuid v4
+    - [x] Debe ser único
 - [ ] test_chain_methods
     - [ ] Debe poder hacerse chaining
 
