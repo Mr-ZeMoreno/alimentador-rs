@@ -6,6 +6,11 @@ pub enum Key {
     Max,
 }
 
+#[derive(Debug)]
+pub enum RangoError {
+    FueraDeRango,
+}
+
 /// Estructura que representa un rango de valores, con un valor inicial
 /// que debe estar dentro de los límites definidos por el rango.
 ///
@@ -15,10 +20,10 @@ pub enum Key {
 /// - `max`: El valor máximo permitido.
 ///
 /// # Ejemplo:
-///! ```rust
-///! let rango = Rango::new(0, 100, 50).unwrap();
-///! assert_eq!(rango.get(), 50);
-///! ```
+/// ```rust
+/// let rango = Rango::new(0, 100, 50).unwrap();
+/// assert_eq!(rango.get(), 50);
+/// ```
 pub struct Rango {
     valor: u32,
     min: u32,
@@ -38,10 +43,10 @@ impl Rango {
     /// de lo contrario, un `Err` indicando que el valor inicial está fuera de los límites.
     ///
     /// # Ejemplo:
-    ///! ```rust
-    ///! let rango = Rango::new(0, 100, 50).unwrap();  // Valor válido
-    ///! let rango_invalido = Rango::new(0, 100, 150); // Error
-    ///! ```
+    /// ```rust
+    /// let rango = Rango::new(0, 100, 50).unwrap();  // Valor válido
+    /// let rango_invalido = Rango::new(0, 100, 150); // Error
+    /// ```
     pub fn new(min: u32, max: u32, valor_inicial: u32) -> Result<Self, &'static str> {
         if valor_inicial < min || valor_inicial > max {
             return Err("El valor inicial está fuera del rango permitido.");
@@ -63,11 +68,11 @@ impl Rango {
     /// o un `Err` si el valor está fuera de los límites.
     ///
     /// # Ejemplo:
-    ///! ```rust
-    ///! let mut rango = Rango::new(0, 100, 50).unwrap();
-    ///! rango.set(80).unwrap();  // Establece un nuevo valor válido
-    ///! rango.set(150);  // Error: El valor está fuera del rango permitido
-    ///! ```
+    /// ```rust
+    /// let mut rango = Rango::new(0, 100, 50).unwrap();
+    /// rango.set(80).unwrap();  // Establece un nuevo valor válido
+    /// rango.set(150);  // Error: El valor está fuera del rango permitido
+    /// ```
     fn set_rango_value(&mut self, valor: u32) -> Result<(), &'static str> {
         if valor < self.min || valor > self.max {
             return Err("El valor está fuera del rango permitido.");
@@ -82,10 +87,10 @@ impl Rango {
     /// El valor actual del rango.
     ///
     /// # Ejemplo:
-    ///! ```rust
-    ///! let rango = Rango::new(0, 100, 50).unwrap();
-    ///! assert_eq!(rango.get(), 50);
-    ///! ```
+    /// ```rust
+    /// let rango = Rango::new(0, 100, 50).unwrap();
+    /// assert_eq!(rango.get(), 50);
+    /// ```
     pub fn get(&self) -> u32 {
         self.valor
     }
@@ -95,7 +100,7 @@ impl Rango {
         HashMap::from([(Key::Min, self.min), (Key::Max, self.max)])
     }
 
-    pub fn set(&mut self, valor: u32, tag: &str) {
+    pub fn set(&mut self, valor: u32, tag: &str) -> Result<(), RangoError> {
         let valor_actual = self.get();
         let rango = self.get_rango();
 
@@ -103,6 +108,7 @@ impl Rango {
         match self.set_rango_value(valor) {
             Ok(()) => {
                 println!("El valor ha cambiado de {} a {}", valor_actual, valor);
+                Ok(())
             }
             Err(_) => {
                 println!(
@@ -111,6 +117,8 @@ impl Rango {
                     rango.get(&Key::Max).unwrap(),
                     valor_actual
                 );
+
+                Err(RangoError::FueraDeRango)
             }
         }
     }
