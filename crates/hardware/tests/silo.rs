@@ -138,12 +138,16 @@ mod silo {
         fn test_actualiza_alimento() {
             let mut silo = Silo::new(CAPACIDAD_SILOS);
 
-            silo.set_alimento(CAPACIDAD_SILOS);
+            silo.set_alimento(CAPACIDAD_SILOS).expect(
+                "[test_actualiza_alimento]: No se ha podido actualizar el alimento [Linea 141]",
+            );
 
-            silo.entregar_pulso(GRAMOS_PULSO);
+            silo.entregar_pulso(GRAMOS_PULSO)
+                .expect("[test_actualiza_alimento]: No se ha podido entregar pulso [Linea 145]");
             assert_eq!(silo.get_alimento(), CAPACIDAD_SILOS - GRAMOS_PULSO);
 
-            silo.entregar_pulso(CAPACIDAD_SILOS - GRAMOS_PULSO);
+            silo.entregar_pulso(CAPACIDAD_SILOS - GRAMOS_PULSO)
+                .expect("[test_actualiza_alimento]:  No se ha podido entregar pulso [Linea 149]");
             assert_eq!(silo.get_alimento(), 0);
         }
 
