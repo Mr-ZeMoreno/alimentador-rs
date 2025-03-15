@@ -1,5 +1,7 @@
 use hardware::dosificador::Dosificador;
 
+const ENTREGA: u32 = 10;
+
 // #[cfg(test)]
 // mod avisos {
 //     // Si no hay comentarios en ignore comentar este modulo
@@ -22,37 +24,32 @@ mod dosificador {
 
     use uuid::Uuid;
 
+    /// Este test comprueba que el objeto inicial tiene los atributos básicos en sus valores
     #[test]
     fn test_creacion_dosificador() {
-        let dosificador = Dosificador::new();
+        let dosificador = Dosificador::new(ENTREGA);
 
         // Verificar valores iniciales
-        assert_eq!(dosificador.get_entrega(), 0);
+        assert_eq!(dosificador.get_entrega(), ENTREGA);
         assert_eq!(dosificador.get_estado(), false);
 
         // Verificar unicidad del UUID (que es única la weá)
         let id1 = dosificador.get_id();
-        let id2 = Dosificador::new().get_id();
+        let id2 = Dosificador::new(ENTREGA).get_id();
         assert_ne!(id1, id2, "Las ID no son únicas");
     }
 
-    #[test]
-    fn test_set_entrega() {
-        let mut dosificador = Dosificador::new();
-        dosificador.set_entrega(10);
-        assert_eq!(dosificador.get_entrega(), 10);
-    }
-
+    /// Prueba que el estado cambia mediante el método set_estado
     #[test]
     fn test_set_estado() {
-        let mut dosificador = Dosificador::new();
+        let mut dosificador = Dosificador::new(ENTREGA);
         dosificador.set_estado(true);
         assert_eq!(dosificador.get_estado(), true);
     }
 
     #[test]
     fn test_get_id() {
-        let dosificador = Dosificador::new();
+        let dosificador = Dosificador::new(ENTREGA);
         let id = dosificador.get_id();
 
         // Verificar que el ID sea un UUID v4 válido
@@ -63,13 +60,5 @@ mod dosificador {
             Some(uuid::Version::Random),
             "La ID no es un UUID v4"
         );
-    }
-
-    #[test]
-    fn test_chain_setters() {
-        let mut dosificador = Dosificador::new();
-        dosificador.set_entrega(5).set_estado(true);
-        assert_eq!(dosificador.get_entrega(), 5);
-        assert_eq!(dosificador.get_estado(), true);
     }
 }

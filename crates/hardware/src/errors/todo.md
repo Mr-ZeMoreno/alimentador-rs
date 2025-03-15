@@ -1,15 +1,18 @@
 # SRC
 ## Dosificador
-- [ ]
+- [ ] Crear `pub enum DosificadorError`
+    - [ ] Error `FueraDeRango`
+
+- [ ] Crear implementacion `PartialEq` para los errores (para comparar errores)
 
 ## Silo
 - [ ]
 
 ## Soplador
-- [ ] Crear `pub enum SopladorError`
-    - [ ] Error `FueraDeRango`
+- [x] Crear `pub enum SopladorError`
+    - [x] Error `FueraDeRango`
 
-- [ ] Crear implementacion `PartialEq` para los errores (para comparar errores)
+- [x] Crear implementacion `PartialEq` para los errores (para comparar errores)
 
 ## Traits
 - [ ]
