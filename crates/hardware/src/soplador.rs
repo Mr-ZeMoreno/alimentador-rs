@@ -3,6 +3,13 @@ use uuid::Uuid;
 
 use types::rango::{Rango, RangoError};
 
+pub const POTENCIA_MAX: u32 = 100;
+pub const POTENCIA_MIN: u32 = 0;
+
+pub const ESTADO_INICIAL: bool = false;
+
+pub const TIEMPO_DE_ENCENDIDO: u32 = 5000;
+
 /// Representa un **Soplador**, que puede ser encendido o apagado y tener su potencia ajustada.
 ///
 /// La estructura `Soplador` tiene las siguientes propiedades:
@@ -31,8 +38,8 @@ impl Soplador {
     ///! ```
     pub fn new() -> Self {
         Self {
-            estado: false,
-            potencia: Rango::new(0, 100, 0).unwrap(),
+            estado: ESTADO_INICIAL,
+            potencia: Rango::new(POTENCIA_MIN, POTENCIA_MAX, POTENCIA_MIN).unwrap(),
             id: Uuid::new_v4(),
         }
     }
@@ -58,7 +65,7 @@ impl Soplador {
     pub fn set_estado(&mut self, n: bool) -> &mut Soplador {
         if n {
             println!("[Soplador][{}]: Encendiendo... Duración 5s", self.id);
-            sleep(5000); // Simula el encendido por 5 segundos.
+            sleep(TIEMPO_DE_ENCENDIDO);
         }
         self.estado = n;
         self
