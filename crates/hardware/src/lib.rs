@@ -4,4 +4,4 @@ pub mod silo;
 pub mod soplador;
 
 pub mod errors;
-pub mod log;
+pub mod logs;
