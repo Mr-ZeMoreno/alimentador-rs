@@ -25,6 +25,7 @@ const TAG: &str = "[Ciclo]";
 /// - **pulsos**: El número total de pulsos por ración.
 /// - **pulso_espera**: El tiempo entre cada pulso en milisegundos.
 /// - **id**: Un identificador único para cada instancia de la ración.
+#[derive(PartialEq, Debug)]
 pub struct Ciclo {
     /// Duración de cada pulso en milisegundos. No debe ser mayor a un minuto en producción.
     pulso_duracion: Rango,
@@ -180,7 +181,7 @@ impl Ciclo {
     /// - Tiempo de espera entre pulsos
     ///
     /// # Retorna:
-    /// Un hashmap
+    /// Estructura ciclo data
     ///
     /// # Ejemplo:
     ///! ```
