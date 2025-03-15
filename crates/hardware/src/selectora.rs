@@ -1,6 +1,4 @@
-use std::collections::HashMap;
-
-use types::rango::{Key, Rango};
+use types::rango::{Rango, RangoData};
 use uuid::Uuid;
 
 pub enum TAGS {
@@ -52,7 +50,7 @@ impl Selectora {
         self.posicion.get()
     }
 
-    pub fn get_posiciones(&self) -> HashMap<Key, u32> {
+    pub fn get_posiciones(&self) -> RangoData {
         self.posicion.get_rango()
     }
 
