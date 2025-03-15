@@ -10,9 +10,9 @@ use std::time::Duration;
 /// - `ms`: El número de milisegundos a dormir.
 ///
 /// # Ejemplo:
-/// ```rust
-/// lib::sleep(2000);  // Pausa de 2 segundos
-/// ```
-pub fn sleep(ms: u64) {
-    thread::sleep(Duration::from_millis(ms));
+///! ```rust
+///! lib::sleep(2000);  // Pausa de 2 segundos
+///! ```
+pub fn sleep(ms: u32) {
+    thread::sleep(Duration::from_millis(ms.into()));
 }

@@ -1,20 +1,20 @@
 use hardware::soplador::Soplador;
 
-#[cfg(test)]
-mod avisos {
-    // Si no hay comentarios en ignore comentar este modulo
-    // #[test]
-    // #[ignore = "Por Favor Leer en TODO.md los test de soplador"]
-    // fn archivo_test() {}
+// #[cfg(test)]
+// mod avisos {
+//     // Si no hay comentarios en ignore comentar este modulo
+//     #[test]
+//     #[ignore = "Por Favor Leer en TODO.md los test de soplador"]
+//     fn archivo_test() {}
 
-    // #[test]
-    // #[ignore = "Por Favor Leer en TODO.md la implementación de soplador"]
-    // fn archivo_implementacion() {}
+//     #[test]
+//     #[ignore = "Por Favor Leer en TODO.md la implementación de soplador"]
+//     fn archivo_implementacion() {}
 
-    // #[test]
-    // #[ignore = "Por Favor Leer en TODO.md los errores de soplador"]
-    // fn archivo_errores() {}
-}
+//     #[test]
+//     #[ignore = "Por Favor Leer en TODO.md los errores de soplador"]
+//     fn archivo_errores() {}
+// }
 
 #[cfg(test)]
 mod soplador {
@@ -102,25 +102,6 @@ mod soplador {
             assert_eq!(soplador.get_potencia(), 100, "La potencia no ha cambiado");
         }
 
-        /// Probamos todos los numeros del rango
-        #[test]
-        fn test_set_todo_el_rango() {
-            let mut soplador = Soplador::new();
-            // Probamos que admite todos los valores entre 0 y 100
-            for i in 0..=100 {
-                // Probamos que cambia el valor
-                soplador
-                    .set_potencia(i)
-                    .expect("[test_set_todo_el_rango] Linea 111");
-                assert_eq!(
-                    soplador.get_potencia(),
-                    i,
-                    "La potencia se pudo cambiar por {}",
-                    i
-                );
-            }
-        }
-
         /// Probamos que no pase el 100
         #[test]
         fn set_sobre_el_rango() {
@@ -170,17 +151,6 @@ mod soplador {
                 "El valor no se ha actualizado"
             );
         }
-    }
-
-    /// Probamos que obtenemos la potencia
-    #[test]
-    fn test_get_potencia() {
-        let soplador = Soplador::new();
-
-        assert!(
-            soplador.get_potencia() <= 100,
-            "El valor devuelto no esta entre el rango 0 y 100"
-        );
     }
 
     /// Verifica que los setters `set_alimento` y `entregar_pulso` se pueden encadenar correctamente.

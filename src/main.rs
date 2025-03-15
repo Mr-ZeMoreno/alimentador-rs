@@ -6,30 +6,35 @@ use system::programa::Programa;
 use system::racion::Racion;
 
 fn main() {
-    let mut ciclo1 = Ciclo::new();
-    ciclo1
-        .set_pulsos(50)
-        .set_pulso_duracion(5000)
-        .set_pulso_espera(8000);
+    let mut c1 = Ciclo::new();
+    c1.set_pulsos(50)
+        .expect("Ha intentado establer una cantidad de pulsos fuera del rango permitido");
+    c1.set_pulso_duracion(5000)
+        .expect("Ha intentado establecer una duracion de pulso fuera del rango permitido");
+    c1.set_pulso_espera(8000)
+        .expect("Ha intentado establecer una espera entre pulsos fuera del rango permitido");
 
-    let mut ciclo2 = Ciclo::new();
-    ciclo2
-        .set_pulsos(20)
-        .set_pulso_duracion(3000)
-        .set_pulso_espera(4000);
+    let mut c2 = Ciclo::new();
+    c2.set_pulsos(20)
+        .expect("Ha intentado establer una cantidad de pulsos fuera del rango permitido");
+    c2.set_pulso_duracion(3000)
+        .expect("Ha intentado establecer una duracion de pulso fuera del rango permitido");
+    c2.set_pulso_espera(4000)
+        .expect("Ha intentado establecer una espera entre pulsos fuera del rango permitido");
 
-    let mut racion = Racion::new(vec![&ciclo1, &ciclo2, &ciclo1, &ciclo1]);
+    let mut racion = Racion::new(vec![&c1, &c2, &c1, &c1]);
 
-    let mut doser: Dosificador = Dosificador::new();
+    let mut doser: Dosificador = Dosificador::new(2);
     let mut soplador: Soplador = Soplador::new();
 
     let mut silo: Silo = Silo::new(24000);
 
-    silo.set_alimento(24000);
+    silo.set_alimento(24000)
+        .expect("Ha intentado ingresar mas alimento que la capacidad del silo");
 
-    doser.set_entrega(2).set_estado(false);
-
-    racion.set_ciclo_espera(60000);
+    racion
+        .set_ciclo_espera(60000)
+        .expect("Ha intentado establecer una espera entre ciclos fuera del rango permitido");
 
     let mut programa: Programa = Programa::new(&mut racion);
 

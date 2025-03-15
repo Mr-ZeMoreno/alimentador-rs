@@ -1,4 +1,4 @@
-use types::rango::{Key, Rango};
+use types::rango::Rango;
 use uuid::Uuid;
 
 /// La estructura `Silo` representa un silo de almacenamiento de alimento.
@@ -185,7 +185,7 @@ impl Silo {
     ///! ```
     fn _get_espacio_restante(&self) -> u32 {
         // En este caso puedo asegurar que siempre habrá un key::max
-        self.alimento.get_rango().get(&Key::Max).unwrap() - self.alimento.get()
+        self.alimento.get_rango().max - self.alimento.get()
     }
 
     /// Obtiene el identificador único de la ración.

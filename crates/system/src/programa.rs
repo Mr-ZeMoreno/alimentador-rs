@@ -1,15 +1,14 @@
 use hardware::{dosificador::Dosificador, silo::Silo, soplador::Soplador};
 
+use crate::logs::Print as SystemPrint;
 use crate::racion::Racion;
-use crate::traits::Print as SystemPrint;
 
-use hardware::traits::Print as HardwarePrint;
-use hardware::traits::PrintConArg;
+use hardware::logs::Print as HardwarePrint;
 
 use utils::utils::sleep;
 
 pub struct Programa<'a> {
-    racion: &'a Racion<'a>, // Ahora `Programa` solo tiene una referencia a `Racion`
+    racion: &'a Racion<'a>,
 }
 
 impl<'a> Programa<'a> {
@@ -24,32 +23,32 @@ impl<'a> Programa<'a> {
             let id = ciclo.get_id();
             println!("[Ración: {}][Tipo: {}]: En Ejecución", i + 1, id);
 
-            let [pulsos, pulso_duracion, pulso_espera]: [u32; 3] = ciclo.get_all();
-
-            if pulso_duracion == 0 || pulsos == 0 || pulso_espera == 0 {
-                break;
-            }
-
             println!("Iniciando...");
             ciclo.print();
 
-            for _pulso in 1..=pulsos {
+            let pulsos = ciclo.get_pulsos();
+            let pulso_duracion = ciclo.get_pulso_duracion();
+            let pulso_espera = ciclo.get_pulso_espera();
+
+            for _pulso in 0..=pulsos {
                 let entregado = doser.get_entrega() * (pulso_duracion / 1000);
 
                 doser.set_estado(true).print();
-                silo.entregar_pulso(entregado).print(entregado);
+                silo.entregar_pulso(entregado)
+                    .expect("Has intentado entregar un pulso mayor a la cantidad de alimento");
+                silo.print();
 
-                sleep(u64::from(pulso_duracion));
+                sleep(pulso_duracion);
 
                 doser.set_estado(false).print();
-                sleep(u64::from(pulso_espera));
+                sleep(pulso_espera);
             }
             println!(
                 "Ración {}: En Espera... Duración {}s",
                 id,
                 self.racion.get_ciclo_espera()
             );
-            sleep(u64::from(self.racion.get_ciclo_espera()));
+            sleep(self.racion.get_ciclo_espera());
         }
     }
 }

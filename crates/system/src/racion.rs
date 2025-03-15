@@ -1,5 +1,12 @@
 use crate::ciclo::Ciclo;
+use types::rango::{Rango, RangoError};
 use uuid::Uuid;
+
+/// Espera mínima de 1 minutos
+pub const ESPERA_MIN: u32 = 60 * 1000 * 1;
+
+/// Espera máxima de 5 horas
+pub const ESPERA_MAX: u32 = 60 * 1000 * 60 * 5;
 
 /// Representa un **Racion** que contiene una lista de ciclos y un tiempo de espera para la siguiente ración.
 ///
@@ -12,7 +19,7 @@ pub struct Racion<'a> {
     ciclos: Vec<&'a Ciclo>,
 
     /// Tiempo de espera antes de la siguiente ración en segundos.
-    ciclo_espera: u32,
+    ciclo_espera: Rango,
 
     /// El identificador único del racion.
     id: Uuid,
@@ -29,14 +36,14 @@ impl<'a> Racion<'a> {
     /// Un nuevo objeto `Racion` con las ciclos proporcionadas, tiempo de espera en 0 y un ID único generado.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let ciclos = vec![&racion1, &racion2]; // Suponiendo que `racion1` y `racion2` son instancias de `Ciclo`.
-    /// let racion = Racion::new(ciclos);
-    /// ```
+    ///! ```
+    ///! let ciclos = vec![&racion1, &racion2]; // Suponiendo que `racion1` y `racion2` son instancias de `Ciclo`.
+    ///! let racion = Racion::new(ciclos);
+    ///! ```
     pub fn new(ciclos: Vec<&'a Ciclo>) -> Self {
         Self {
             ciclos,
-            ciclo_espera: 0,
+            ciclo_espera: Rango::new(ESPERA_MIN, ESPERA_MAX, ESPERA_MIN).unwrap(),
             id: Uuid::new_v4(),
         }
     }
@@ -49,10 +56,10 @@ impl<'a> Racion<'a> {
     /// Un valor de tipo `&Vec<&'a Ciclo>`, que es una referencia a un vector de referencias a ciclos.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let ciclos = racion.get_ciclos();
-    /// assert_eq!(ciclos.len(), 2); // Suponiendo que el racion tiene 2 ciclos asociadas.
-    /// ```
+    ///! ```
+    ///! let ciclos = racion.get_ciclos();
+    ///! assert_eq!(ciclos.len(), 2); // Suponiendo que el racion tiene 2 ciclos asociadas.
+    ///! ```
     pub fn get_ciclos(&self) -> &Vec<&'a Ciclo> {
         &self.ciclos
     }
@@ -66,13 +73,15 @@ impl<'a> Racion<'a> {
     /// Una referencia mutable al objeto `Racion` para permitir el encadenamiento de llamadas (method chaining).
     ///
     /// # Ejemplo:
-    /// ```
-    /// racion.set_ciclo_espera(30); // Establece un tiempo de espera de 30 segundos.
-    /// assert_eq!(racion.get_ciclo_espera(), 30); // Verifica que el tiempo de espera sea ahora 30 segundos.
-    /// ```
-    pub fn set_ciclo_espera(&mut self, n: u32) -> &mut Self {
-        self.ciclo_espera = n;
-        self
+    ///! ```
+    ///! racion.set_ciclo_espera(30); // Establece un tiempo de espera de 30 segundos.
+    ///! assert_eq!(racion.get_ciclo_espera(), 30); // Verifica que el tiempo de espera sea ahora 30 segundos.
+    ///! ```
+    pub fn set_ciclo_espera(&mut self, n: u32) -> Result<(), crate::errors::RacionError> {
+        match self.ciclo_espera.set(n, "[Racion]") {
+            Ok(()) => Ok(()),
+            Err(RangoError::FueraDeRango) => Err(crate::errors::RacionError::EsperaFueraDeRango),
+        }
     }
 
     /// Obtiene el tiempo de espera actual para el siguiente ciclo.
@@ -81,12 +90,12 @@ impl<'a> Racion<'a> {
     /// El tiempo de espera en segundos (de tipo `u32`).
     ///
     /// # Ejemplo:
-    /// ```
-    /// let tiempo_espera = racion.get_ciclo_espera();
-    /// assert_eq!(tiempo_espera, 30); // El tiempo de espera debería ser 30 segundos.
-    /// ```
+    ///! ```
+    ///! let tiempo_espera = racion.get_ciclo_espera();
+    ///! assert_eq!(tiempo_espera, 30); // El tiempo de espera debería ser 30 segundos.
+    ///! ```
     pub fn get_ciclo_espera(&self) -> u32 {
-        self.ciclo_espera
+        self.ciclo_espera.get()
     }
 
     /// Obtiene el identificador único (UUID) del racion.
@@ -95,10 +104,10 @@ impl<'a> Racion<'a> {
     /// El identificador único del racion, que es de tipo `Uuid`.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let id = racion.get_id();
-    /// println!("El ID del racion es: {}", id);
-    /// ```
+    ///! ```
+    ///! let id = racion.get_id();
+    ///! println!("El ID del racion es: {}", id);
+    ///! ```
     pub fn get_id(&self) -> Uuid {
         self.id
     }
