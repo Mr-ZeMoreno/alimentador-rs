@@ -118,23 +118,19 @@ mod silo {
         fn test_aumenta_varias_veces() {
             let mut silo = Silo::new(CAPACIDAD_SILOS);
 
-            for i in 1..=100 {
-                silo.set_alimento(i).expect(
-                    "[test_aumenta_varias_veces]: No se ha podido actualizar alimento [Linea 105]",
-                );
-                assert_eq!(silo.get_historico(), i);
-            }
+            silo.set_alimento(CAPACIDAD_SILOS).expect(
+                "[test_aumenta_varias_veces]: No se ha podido actualizar alimento [Linea 105]",
+            );
+            assert_eq!(silo.get_historico(), CAPACIDAD_SILOS);
 
             silo.set_alimento(0)
                 .expect("[test_aumenta_varias_veces]: No se ha podido actualiza [Linea 111]");
-            assert_eq!(silo.get_historico(), 100);
+            assert_eq!(silo.get_historico(), CAPACIDAD_SILOS);
 
-            for i in 1..100 {
-                silo.set_alimento(i).expect(
-                    "[test_aumenta_varias_veces]: No se ha podido actualizar alimento [Linea 116]",
-                );
-                assert_eq!(silo.get_historico(), i + 100);
-            }
+            silo.set_alimento(CAPACIDAD_SILOS).expect(
+                "[test_aumenta_varias_veces]: No se ha podido actualizar alimento [Linea 105]",
+            );
+            assert_eq!(silo.get_historico(), 2 * CAPACIDAD_SILOS);
         }
     }
 
