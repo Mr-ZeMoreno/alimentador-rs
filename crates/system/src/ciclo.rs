@@ -1,5 +1,22 @@
-use types::rango::Rango;
+use types::rango::{Rango, RangoData};
 use uuid::Uuid;
+
+pub const ESPERA_MIN: u32 = 1000;
+pub const ESPERA_MAX: u32 = 20000;
+
+pub const PULSOS_MIN: u32 = 0;
+pub const PULSOS_MAX: u32 = 10000;
+
+pub const DURACION_MIN: u32 = 1000;
+pub const DURACION_MAX: u32 = 10000;
+
+pub struct CicloData {
+    pub pulsos: RangoData,
+    pub duracion: RangoData,
+    pub espera: RangoData,
+}
+
+const TAG: &str = "[Ciclo]";
 
 /// Representa una **Ración**, que contiene parámetros para la duración y el comportamiento de los pulsos.
 ///
@@ -30,21 +47,17 @@ impl Ciclo {
     /// Un nuevo objeto `Ciclo` con los valores predeterminados y un ID único generado.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let Ciclo = Ciclo::new();
-    /// assert_eq!(Ciclo.get_pulsos(), 0); // La cantidad de pulsos debería ser 0 por defecto.
-    /// ```
+    ///! ```
+    ///! let Ciclo = Ciclo::new();
+    ///! assert_eq!(Ciclo.get_pulsos(), 0); // La cantidad de pulsos debería ser 0 por defecto.
+    ///! ```
     pub fn new() -> Self {
         Self {
-            pulso_duracion: Rango::new(1000, 10000, 1000).unwrap(),
-            pulsos: Rango::new(0, 10000, 0).unwrap(),
-            pulso_espera: Rango::new(1000, 20000, 1000).unwrap(),
+            pulso_duracion: Rango::new(DURACION_MIN, DURACION_MAX, DURACION_MIN).unwrap(),
+            pulsos: Rango::new(PULSOS_MIN, PULSOS_MAX, PULSOS_MIN).unwrap(),
+            pulso_espera: Rango::new(ESPERA_MIN, ESPERA_MAX, ESPERA_MIN).unwrap(),
             id: Uuid::new_v4(),
         }
-    }
-
-    fn get_tag(&self, nombre: &str) -> String {
-        format!("[ración][{}][{}]: ", self.id, nombre)
     }
 }
 
@@ -59,14 +72,18 @@ impl Ciclo {
     /// Una referencia mutable al objeto `Ciclo` para permitir el encadenamiento de llamadas (method chaining).
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut Ciclo = Ciclo::new();
-    /// Ciclo.set_pulso_duracion(500); // Establece la duración del pulso a 500 ms.
-    /// assert_eq!(Ciclo.get_pulso_duracion(), 500); // Verifica que la duración del pulso sea 500 ms.
-    /// ```
-    pub fn set_pulso_duracion(&mut self, n: u32) -> &mut Self {
-        self.pulso_duracion.set(n, &self.get_tag("pulsos_duracion"));
-        self
+    ///! ```
+    ///! let mut Ciclo = Ciclo::new();
+    ///! Ciclo.set_pulso_duracion(500); // Establece la duración del pulso a 500 ms.
+    ///! assert_eq!(Ciclo.get_pulso_duracion(), 500); // Verifica que la duración del pulso sea 500 ms.
+    ///! ```
+    pub fn set_pulso_duracion(&mut self, n: u32) -> Result<(), crate::errors::CicloError> {
+        match self.pulso_duracion.set(n, TAG) {
+            Ok(()) => Ok(()),
+            Err(types::rango::RangoError::FueraDeRango) => {
+                Err(crate::errors::CicloError::DuracionFueraDeRango)
+            }
+        }
     }
 
     /// Establece el número total de pulsos por ración.
@@ -78,14 +95,18 @@ impl Ciclo {
     /// Una referencia mutable al objeto `Ciclo` para permitir el encadenamiento de llamadas.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut Ciclo = Ciclo::new();
-    /// Ciclo.set_pulsos(10); // Establece 10 pulsos por ración.
-    /// assert_eq!(Ciclo.get_pulsos(), 10); // Verifica que el número de pulsos sea 10.
-    /// ```
-    pub fn set_pulsos(&mut self, n: u32) -> &mut Self {
-        self.pulsos.set(n, &self.get_tag("pulsos"));
-        self
+    ///! ```
+    ///! let mut Ciclo = Ciclo::new();
+    ///! Ciclo.set_pulsos(10); // Establece 10 pulsos por ración.
+    ///! assert_eq!(Ciclo.get_pulsos(), 10); // Verifica que el número de pulsos sea 10.
+    ///! ```
+    pub fn set_pulsos(&mut self, n: u32) -> Result<(), crate::errors::CicloError> {
+        match self.pulsos.set(n, TAG) {
+            Ok(()) => Ok(()),
+            Err(types::rango::RangoError::FueraDeRango) => {
+                Err(crate::errors::CicloError::CantidadFueraDeRango)
+            }
+        }
     }
 
     /// Establece el tiempo de espera entre pulsos en milisegundos.
@@ -97,14 +118,18 @@ impl Ciclo {
     /// Una referencia mutable al objeto `Ciclo` para permitir el encadenamiento de llamadas.
     ///
     /// # Ejemplo:
-    /// ```
-    /// let mut Ciclo = Ciclo::new();
-    /// Ciclo.set_pulso_espera(100); // Establece el tiempo de espera entre pulsos a 100 ms.
-    /// assert_eq!(Ciclo.get_pulso_espera(), 100); // Verifica que el tiempo de espera sea 100 ms.
-    /// ```
-    pub fn set_pulso_espera(&mut self, n: u32) -> &mut Self {
-        self.pulso_espera.set(n, &self.get_tag("pulsos_espera"));
-        self
+    ///! ```
+    ///! let mut Ciclo = Ciclo::new();
+    ///! Ciclo.set_pulso_espera(100); // Establece el tiempo de espera entre pulsos a 100 ms.
+    ///! assert_eq!(Ciclo.get_pulso_espera(), 100); // Verifica que el tiempo de espera sea 100 ms.
+    ///! ```
+    pub fn set_pulso_espera(&mut self, n: u32) -> Result<(), crate::errors::CicloError> {
+        match self.pulso_espera.set(n, TAG) {
+            Ok(()) => Ok(()),
+            Err(types::rango::RangoError::FueraDeRango) => {
+                Err(crate::errors::CicloError::EsperaFueraDeRango)
+            }
+        }
     }
 
     /// Obtiene el número total de pulsos por ración.
@@ -113,10 +138,10 @@ impl Ciclo {
     /// El número total de pulsos por ración (de tipo `u32`).
     ///
     /// # Ejemplo:
-    /// ```
-    /// let Ciclo = Ciclo::new();
-    /// assert_eq!(Ciclo.get_pulsos(), 0); // Debería ser 0 por defecto.
-    /// ```
+    ///! ```
+    ///! let Ciclo = Ciclo::new();
+    ///! assert_eq!(Ciclo.get_pulsos(), 0); // Debería ser 0 por defecto.
+    ///! ```
     pub fn get_pulsos(&self) -> u32 {
         self.pulsos.get()
     }
@@ -127,10 +152,10 @@ impl Ciclo {
     /// El tiempo de espera entre pulsos (de tipo `u32`).
     ///
     /// # Ejemplo:
-    /// ```
-    /// let Ciclo = Ciclo::new();
-    /// assert_eq!(Ciclo.get_pulso_espera(), 0); // Debería ser 0 por defecto.
-    /// ```
+    ///! ```
+    ///! let Ciclo = Ciclo::new();
+    ///! assert_eq!(Ciclo.get_pulso_espera(), 0); // Debería ser 0 por defecto.
+    ///! ```
     pub fn get_pulso_espera(&self) -> u32 {
         self.pulso_espera.get()
     }
@@ -141,10 +166,10 @@ impl Ciclo {
     /// La duración del pulso en milisegundos (de tipo `u32`).
     ///
     /// # Ejemplo:
-    /// ```
-    /// let Ciclo = Ciclo::new();
-    /// assert_eq!(Ciclo.get_pulso_duracion(), 0); // Debería ser 0 por defecto.
-    /// ```
+    ///! ```
+    ///! let Ciclo = Ciclo::new();
+    ///! assert_eq!(Ciclo.get_pulso_duracion(), 0); // Debería ser 0 por defecto.
+    ///! ```
     pub fn get_pulso_duracion(&self) -> u32 {
         self.pulso_duracion.get()
     }
@@ -155,20 +180,19 @@ impl Ciclo {
     /// - Tiempo de espera entre pulsos
     ///
     /// # Retorna:
-    /// Un array de tres elementos (`[u32; 3]`), representando los pulsos, la duración del pulso y el tiempo de espera entre pulsos.
+    /// Un hashmap
     ///
     /// # Ejemplo:
-    /// ```
-    /// let Ciclo = Ciclo::new();
-    /// let parametros = Ciclo.get_all();
-    /// assert_eq!(parametros, [0, 0, 0]); // Todos los valores deberían ser 0 por defecto.
-    /// ```
-    pub fn get_all(&self) -> [u32; 3] {
-        [
-            self.pulsos.get(),
-            self.pulso_duracion.get(),
-            self.pulso_espera.get(),
-        ]
+    ///! ```
+    ///! let Ciclo = Ciclo::new();
+    ///! let parametros = Ciclo.get_all();
+    ///! ```
+    pub fn get_all(&self) -> CicloData {
+        CicloData {
+            pulsos: self.pulsos.get_rango(),
+            duracion: self.pulso_duracion.get_rango(),
+            espera: self.pulso_espera.get_rango(),
+        }
     }
 
     /// Obtiene el identificador único de la ración.
@@ -177,11 +201,11 @@ impl Ciclo {
     /// El identificador único de la ración (de tipo `Uuid`).
     ///
     /// # Ejemplo:
-    /// ```
-    /// let Ciclo = Ciclo::new();
-    /// let id = Ciclo.get_id();
-    /// println!("El ID de la ración es: {}", id);
-    /// ```
+    ///! ```
+    ///! let Ciclo = Ciclo::new();
+    ///! let id = Ciclo.get_id();
+    ///! println!("El ID de la ración es: {}", id);
+    ///! ```
     pub fn get_id(&self) -> Uuid {
         self.id
     }
